@@ -1,0 +1,104 @@
+.qualification-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    font-style: unset;
+    font-weight: bold;
+    font-size: 24px;
+    textAlign: "center";
+    marginBottom: "20px";
+    marginTop: "30px"
+}
+
+.qualification-table th,
+.qualification-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: left;
+}
+
+.qualification-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+}
+
+.remove-btn {
+    background-color: #ff4d4f;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.remove-btn:hover {
+    background-color: #ff1a1a;
+}
+
+/* Add Row Button */
+.add-btn {
+    background-color: #4CAF50; /* Green */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+
+.add-btn:hover {
+    background-color: #45a049; /* Darker green */
+}
+
+/* Submit Button */
+.submit-btn {
+    background-color: #007BFF; /* Blue */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+/* General Button Focus Effect */
+button:focus {
+    outline: 2px solid #0056b3;
+    outline-offset: 2px;
+}
+
+/* Error Message Styling */
+.error-message {
+    color: #ff4d4d; /* Red color for errors */
+    background-color: #ffe6e6; /* Light red background */
+    border: 1px solid #ff4d4d; /* Red border */
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+    width: 100%;
+    max-width: 400px; /* Restrict the width */
+    margin-left: auto;
+    margin-right: auto; /* Center the error box */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Add some space below the error message */
+.error-message + .form-field {
+    margin-top: 20px;
+}
