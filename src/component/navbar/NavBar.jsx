@@ -1,8 +1,8 @@
-// import {useEffect, useState} from 'react'
+import './Navbar.css';
+import {Link} from "react-router-dom";
 import {images} from "../../assets/assets.js";
 import './Navbar.css';
 import {useState} from "react";
-import {Link} from "react-router-dom";
 
 const NavBar = () => {
     const [dropdown, setDropdown] = useState(null);
@@ -19,22 +19,22 @@ const NavBar = () => {
         <nav className='nav-container'>
             <img src={images.logo} alt="Logo" className='logo'/>
             <ul className="nav-list">
+
                 <li>
                     <Link to="/">
                         <img src={images.home} alt="home" className='home'/>
                     </Link>
                 </li>
                 <div className='list-align'>
-                    {/*Students*/}
+
                     <li>
-                        <li><Link to="/students">STUDENTS</Link></li>
-                    </li>
-                    {/*Teachers*/}
-                    <li>
-                        <li><Link to="/teachers">TEACHERS</Link></li>
+                        <Link to="/students">STUDENTS</Link>
                     </li>
 
-                    {/*Courses*/}
+                    <li>
+                        <Link to="/teachers">TEACHERS</Link>
+                    </li>
+
                     <li
                         onMouseEnter={() => toggleDropdown("COURSES")}
                         onMouseLeave={() => toggleDropdown(null)}
@@ -49,7 +49,6 @@ const NavBar = () => {
                         )}
                     </li>
 
-                    {/* IELTS Dropdown */}
                     <li
                         onMouseEnter={() => toggleDropdown("IELTS")}
                         onMouseLeave={() => toggleDropdown(null)}
@@ -64,7 +63,6 @@ const NavBar = () => {
                         )}
                     </li>
 
-                    {/* PTE Dropdown */}
                     <li
                         onMouseEnter={() => toggleDropdown("PTE")}
                         onMouseLeave={() => toggleDropdown(null)}
@@ -79,7 +77,6 @@ const NavBar = () => {
                         )}
                     </li>
 
-                    {/*/!* OET Dropdown *!/*/}
                     <li
                         onMouseEnter={() => toggleDropdown("OET")}
                         onMouseLeave={() => toggleDropdown(null)}
