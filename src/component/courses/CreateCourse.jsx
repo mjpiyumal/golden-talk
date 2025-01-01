@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Course.css";
+import {baseUrl} from "../../assets/assets.js";
 
 const CreateCourse = () => {
     const [formData, setFormData] = useState({
@@ -47,7 +48,7 @@ const CreateCourse = () => {
 
         // If validation is successful, submit the form
         axios
-            .post("http://localhost:9090/gt/api/v1/students/courses", courseData)
+            .post(baseUrl + "students/courses", courseData)
             .then((response) => {
                 alert("Course added successfully");
                 setFormData({

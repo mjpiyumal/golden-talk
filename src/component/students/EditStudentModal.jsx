@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Student.css";
+import {baseUrl} from "../../assets/assets.js";
 
 const EditStudentModal = ({ student, onClose, onSave }) => {
     const [formData, setFormData] = useState({
@@ -19,7 +20,7 @@ const EditStudentModal = ({ student, onClose, onSave }) => {
 
     const handleSubmit = () => {
         axios
-            .put(`http://localhost:9090/gt/api/v1/students/${student.studentId}`, {
+            .put(baseUrl +`students/${student.studentId}`, {
                 ...formData,
                 address: {
                     street: "Updated Street", // Placeholder values

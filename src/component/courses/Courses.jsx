@@ -2,6 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useTable} from "react-table";
 import axios from "axios";
 import "./Course.css"
+import {baseUrl} from "../../assets/assets.js";
 
 
 const Courses = () => {
@@ -11,7 +12,7 @@ const Courses = () => {
     // Fetch data from the endpoint
     useEffect(() => {
         axios
-            .get("http://localhost:9090/gt/api/v1/courses")
+            .get(baseUrl+"courses")
             .then((response) => {
                 setData(response.data);
             })

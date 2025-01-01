@@ -22,6 +22,8 @@ export const images = {
     home,
 }
 
+export const baseUrl = "http://localhost:9090/gt/api/v1/";
+
 // export const projectsData = [
 //
 //     {

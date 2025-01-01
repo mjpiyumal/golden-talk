@@ -3,6 +3,7 @@ import { useTable } from "react-table";
 import axios from "axios";
 import EditStudentModal from "./EditStudentModal"; // Import the modal
 import "./Student.css";
+import {baseUrl} from "../../assets/assets.js";
 
 const Students = () => {
     const [data, setData] = useState([]);
@@ -12,7 +13,7 @@ const Students = () => {
     // Fetch data from API
     useEffect(() => {
         axios
-            .get("http://localhost:9090/gt/api/v1/students?deleted=false")
+            .get(baseUrl +"students?deleted=false")
             .then((response) => {
                 const students = response.data.map((student) => ({
                     studentId: student.studentId,
@@ -48,7 +49,7 @@ const Students = () => {
     const handleSecondPaymentBlur = (studentId, courseId, value) => {
         axios
             .put(
-                `http://localhost:9090/gt/api/v1/students/${studentId}/courses/${courseId}?payment=${value}`
+                baseUrl + `students/${studentId}/courses/${courseId}?payment=${value}`
             )
             .then(() => {
                 // Update the data locally after successful PUT
@@ -68,7 +69,7 @@ const Students = () => {
     // Handle student deletion
     const handleDeleteStudent = (studentId) => {
         axios
-            .delete(`http://localhost:9090/gt/api/v1/students/${studentId}`)
+            .delete(baseUrl + `students/${studentId}`)
             .then(() => {
                 // Update the data locally after successful DELETE
                 setData((prevData) => prevData.filter((student) => student.studentId !== studentId));
