@@ -75,12 +75,11 @@ const Courses = () => {
 
     return (
         <div className='headers' style={{padding: "53px", minHeight: "100vh"}}>
-            {/*<h1 >Course Table</h1>*/}
 
             <div className='course-table-container'>
                 <h1 className='header-style-1'> Course Details</h1>
                 {/* Filter Section */}
-                <div style={{ marginBottom: "20px", textAlign: "center" }}>
+                <div style={{ marginBottom: "20px", textAlign: "left" }}>
                     {/*<label htmlFor="filter">Filter by Course ID: </label>*/}
                     <input
                         id="filter"
@@ -88,23 +87,17 @@ const Courses = () => {
                         type="text"
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
-                        style={{marginBottom: "10px", padding: "5px"}}
+                        style={{marginBottom: "10px", padding: "5px", borderRadius: "10px"}}
                     />
                 </div>
                 <table {...getTableProps()} className='course-table'>
                     <thead>
                     {headerGroups.map((headerGroup) => (
-                        <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: "#f1f1f1" }}>
+                        <tr {...headerGroup.getHeaderGroupProps()} >
                             {headerGroup.headers.map((column) => (
                                 <th
                                     key={column.id || column.accessor} // Explicitly assign key
-                                    {...column.getHeaderProps()}
-                                    style={{
-                                        borderBottom: "2px solid black",
-                                        background: "#f2f2f2",
-                                        padding: "8px",
-                                    }}
-                                >
+                                    {...column.getHeaderProps()}>
                                     {column.render("Header")}
                                 </th>
 
@@ -121,8 +114,7 @@ const Courses = () => {
                                 {row.cells.map((cell) => {
                                     const {key: cellKey, ...cellProps} = cell.getCellProps(); // Do the same for cells
                                     return (
-                                        <td key={cellKey} {...cellProps}
-                                            style={{padding: "8px", border: "1px solid black"}}>
+                                        <td key={cellKey} {...cellProps}>
                                             {cell.render("Cell")}
                                         </td>
                                     );

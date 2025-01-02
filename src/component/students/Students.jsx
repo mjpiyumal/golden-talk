@@ -9,6 +9,7 @@ const Students = () => {
     const [data, setData] = useState([]);
     const [selectedStudent, setSelectedStudent] = useState(null); // For modal
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filterText, setFilterText] = useState("");
 
     // Fetch data from API
     useEffect(() => {
@@ -32,7 +33,8 @@ const Students = () => {
             .catch((error) => {
                 console.error("Error fetching student data:", error);
             });
-    }, []);
+    }, [])
+
 
     // Handle modal open/close
     const openModal = (student) => {
@@ -78,6 +80,11 @@ const Students = () => {
                 console.error("Error deleting student:", error);
             });
     };
+
+    // Filter data based on Course ID
+    const filteredData = data.filter(student =>
+        student.studentId.toString().includes(filterText)
+    );
 
     // Define columns
     const columns = React.useMemo(
@@ -149,19 +156,32 @@ const Students = () => {
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({ columns, data });
+    } = useTable({ columns, data:filteredData });
 
     return (
         <div className="student-table-container">
             <h1 className='header-style'>Student Records</h1>
+
+            <div style={{marginBottom: "20px", textAlign: "left"}}>
+                {/*<label htmlFor="filter">Filter by Course ID: </label>*/}
+                <input
+                    id="filter"
+                    placeholder="Filter by Student ID"
+                    type="text"
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    style={{marginBottom: "10px", padding: "5px", borderRadius: "10px"}}
+                />
+            </div>
+
             <table {...getTableProps()} className="student-table">
                 <thead>
                 {headerGroups.map((headerGroup) => {
-                    const { key, ...rest } = headerGroup.getHeaderGroupProps(); // Destructure key
+                    const {key, ...rest} = headerGroup.getHeaderGroupProps(); // Destructure key
                     return (
                         <tr key={key} {...rest}>
                             {headerGroup.headers.map((column) => {
-                                const { key: columnKey, ...columnRest } = column.getHeaderProps(); // Destructure key
+                                const {key: columnKey, ...columnRest} = column.getHeaderProps(); // Destructure key
                                 return (
                                     <th key={columnKey} {...columnRest}>
                                         {column.render("Header")}
@@ -176,11 +196,11 @@ const Students = () => {
                 <tbody {...getTableBodyProps()}>
                 {rows.map((row) => {
                     prepareRow(row);
-                    const { key, ...rest } = row.getRowProps(); // Destructure key
+                    const {key, ...rest} = row.getRowProps(); // Destructure key
                     return (
                         <tr key={key} {...rest}>
                             {row.cells.map((cell) => {
-                                const { key: cellKey, ...cellRest } = cell.getCellProps(); // Destructure key
+                                const {key: cellKey, ...cellRest} = cell.getCellProps(); // Destructure key
                                 return (
                                     <td key={cellKey} {...cellRest}>
                                         {cell.render("Cell")}
