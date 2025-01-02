@@ -81,9 +81,14 @@ const Students = () => {
             });
     };
 
-    // Filter data based on Course ID
+    // Filter data based on studentId ID
     const filteredData = data.filter(student =>
         student.studentId.toString().includes(filterText)
+    );
+
+    // Filter data based on firstName
+    const filteredName = data.filter(student =>
+        student.firstName.toString().includes(filterText)
     );
 
     // Define columns
@@ -156,7 +161,7 @@ const Students = () => {
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({ columns, data:filteredData });
+    } = useTable({ columns, data:filteredData, data1: filteredName});
 
     return (
         <div className="student-table-container">
