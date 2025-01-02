@@ -103,6 +103,7 @@ const Courses = () => {
                         <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: "#f1f1f1" }}>
                             {headerGroup.headers.map((column) => (
                                 <th
+                                    key={column.id || column.accessor} // Explicitly assign key
                                     {...column.getHeaderProps()}
                                     style={{
                                         borderBottom: "2px solid black",
@@ -112,6 +113,7 @@ const Courses = () => {
                                 >
                                     {column.render("Header")}
                                 </th>
+
                             ))}
                         </tr>
                     ))}
@@ -119,19 +121,18 @@ const Courses = () => {
                     <tbody {...getTableBodyProps()}>
                     {rows.map((row) => {
                         prepareRow(row);
+                        const {key, ...rowProps} = row.getRowProps(); // Extract and remove 'key' from props
                         return (
-                            <tr {...row.getRowProps()}>
-                                {row.cells.map((cell) => (
-                                    <td
-                                        {...cell.getCellProps()}
-                                        style={{
-                                            padding: "8px",
-                                            border: "1px solid black",
-                                        }}
-                                    >
-                                        {cell.render("Cell")}
-                                    </td>
-                                ))}
+                            <tr key={key} {...rowProps}>
+                                {row.cells.map((cell) => {
+                                    const {key: cellKey, ...cellProps} = cell.getCellProps(); // Do the same for cells
+                                    return (
+                                        <td key={cellKey} {...cellProps}
+                                            style={{padding: "8px", border: "1px solid black"}}>
+                                            {cell.render("Cell")}
+                                        </td>
+                                    );
+                                })}
                             </tr>
                         );
                     })}

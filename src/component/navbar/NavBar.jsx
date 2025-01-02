@@ -36,6 +36,20 @@ const NavBar = () => {
                     </li>
 
                     <li
+                        onMouseEnter={() => toggleDropdown("PAYMENTS")}
+                        onMouseLeave={() => toggleDropdown(null)}
+                        className="nav-item"
+                    >
+                        <Link to="#">PAYMENTS</Link>
+                        {dropdown === "PAYMENTS" && (
+                            <ul className="dropdown-menu">
+                                <li><Link to="/upcomming-payments">Upcoming Payments</Link></li>
+                                <li><Link to="/delay-payments">Delay Payments</Link></li>
+                            </ul>
+                        )}
+                    </li>
+
+                    <li
                         onMouseEnter={() => toggleDropdown("COURSES")}
                         onMouseLeave={() => toggleDropdown(null)}
                         className="nav-item"

@@ -53,6 +53,7 @@ form .error {
 .submit-button:hover {
     background-color: #0056b3;
 }
+
 /* Container styling */
 /* Container styling */
 .student-table-container {
@@ -192,4 +193,15 @@ h1 {
 
 .delete-button:active {
     background-color: #cc0000;
+}
+
+.header-style {
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional */
+    margin-top: 68px;
+    font-size: 30px;
+    font-weight: bold;
 }

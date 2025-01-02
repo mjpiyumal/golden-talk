@@ -153,7 +153,7 @@ const Students = () => {
 
     return (
         <div className="student-table-container">
-            <h1>Student Table</h1>
+            <h1 className='header-style'>Student Records</h1>
             <table {...getTableProps()} className="student-table">
                 <thead>
                 {headerGroups.map((headerGroup) => {

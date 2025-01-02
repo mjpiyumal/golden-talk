@@ -48,7 +48,7 @@ const CreateCourse = () => {
 
         // If validation is successful, submit the form
         axios
-            .post(baseUrl + "students/courses", courseData)
+            .post(baseUrl + "courses", courseData)
             .then((response) => {
                 alert("Course added successfully");
                 setFormData({

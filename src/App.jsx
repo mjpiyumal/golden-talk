@@ -11,6 +11,8 @@ import StudentRegisterOet from "./component/students/students-oet/StudentRegiste
 import TeacherRegisterOet from "./component/techers/teachers-oet/TeacherRegisterOet.jsx";
 import Courses from "./component/courses/Courses.jsx";
 import CreateCourse from "./component/courses/CreateCourse.jsx";
+import UpcomingPayments from "./component/payments/UpcomingPayments.jsx";
+import DelayPayments from "./component/payments/DelayPayments.jsx";
 
 
 function App() {
@@ -25,6 +27,10 @@ function App() {
 
                     <Route path="/teachers" element={<Teachers/>}/>
                     <Route path="/students" element={<Students/>}/>
+
+                    {/*Payments*/}
+                    <Route path="/upcomming-payments" element={<UpcomingPayments/>}/>
+                    <Route path="/delay-payments" element={<DelayPayments/>}/>
 
                     {/*Courses*/}
                     <Route path="/courses" element={<Courses/>}/>

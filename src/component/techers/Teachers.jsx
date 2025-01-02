@@ -1,292 +1,208 @@
-import  { useState, useEffect } from "react";
-import axios from "axios";
+import {useState, useEffect} from "react";
 import "./Teacher.css"
+import {baseUrl} from "../../assets/assets.js";
 
 
 const Teachers = () => {
-    const [teachers, setTeachers] = useState([]); // State for teacher data
-    const [filteredTeachers, setFilteredTeachers] = useState([]); // State for filtered data
-    const [sectionFilter, setSectionFilter] = useState("PTE"); // Default section filter
-    const [sectionIdFilter, setSectionIdFilter] = useState(""); // Filter for Section ID
-    const [teacherIdFilter, setTeacherIdFilter] = useState(""); // Filter for Teacher ID
-    const [editingTeacher, setEditingTeacher] = useState(null); // Track the teacher being edited
 
-    // Fetch data from API
+    const [data, setData] = useState([]);
+    const [selectedTeacher, setSelectedTeacher] = useState(null); // Store the teacher being updated
+    const [updateForm, setUpdateForm] = useState({
+        name: '',
+        nic: '',
+        phoneNumber: '',
+        sectionId: '',
+        courseIds: [],
+        qualifications: [{ qualification: '', institute: '' }],
+    });
+
+    // Fetch data
     useEffect(() => {
-        const fetchTeachers = async () => {
-            try {
-                const response = await axios.get("http://localhost:9090/gt/api/v1/teachers");
-                setTeachers(response.data);
-                applyFilters(response.data);
-            } catch (error) {
-                console.error("Error fetching teacher data:", error);
-            }
-        };
-        fetchTeachers();
+        fetch(baseUrl + 'teachers')
+            .then((response) => response.json())
+            .then((data) => {
+                console.log(data); // Debug: Log the fetched data
+                setData(data);
+            })
+            .catch((error) => console.error('Error fetching data:', error));
     }, []);
 
-    // Apply filters
-    const applyFilters = (data) => {
-        let filtered = data;
-
-        // Apply section filter
-        if (sectionFilter) {
-            filtered = filtered.filter((teacher) => teacher.sectionName === sectionFilter);
-        }
-
-        // Apply Section ID filter
-        if (sectionIdFilter) {
-            filtered = filtered.filter((teacher) =>
-                teacher.id.toString().includes(sectionIdFilter)
-            );
-        }
-
-        // Apply Teacher ID filter
-        if (teacherIdFilter) {
-            filtered = filtered.filter((teacher) =>
-                teacher.id.toString().includes(teacherIdFilter)
-            );
-        }
-
-        setFilteredTeachers(filtered);
+    // Handle Update Button Click
+    const handleUpdateClick = (teacher) => {
+        setSelectedTeacher(teacher);
+        setUpdateForm({
+            name: teacher.name,
+            nic: teacher.nic,
+            phoneNumber: teacher.phoneNumber,
+            sectionId: teacher.section?.id || '',
+            courseIds: teacher.courses?.map((course) => course.id) || [],
+            qualifications: teacher.qualifications || [{ qualification: '', institute: '' }],
+        });
     };
 
-    // Update filters whenever the state changes
-    useEffect(() => {
-        applyFilters(teachers);
-    }, [sectionFilter, sectionIdFilter, teacherIdFilter, teachers]);
-
-    // Handle update request
-    const handleUpdateTeacher = async (updatedTeacher) => {
-        try {
-            const response = await axios.put(
-                `http://localhost:9090/gt/api/v1/teachers/${updatedTeacher.id}`,
-                updatedTeacher
-            );
-            alert("Teacher updated successfully!");
-            const updatedTeachers = teachers.map((teacher) =>
-                teacher.id === updatedTeacher.id ? response.data : teacher
-            );
-            setTeachers(updatedTeachers);
-            setEditingTeacher(null); // Close the edit form
-        } catch (error) {
-            console.error("Error updating teacher:", error);
-            alert("Failed to update teacher.");
+    // Handle Form Input Changes
+    const handleFormChange = (e, index = null) => {
+        const { name, value } = e.target;
+        if (name.startsWith('qualification') || name.startsWith('institute')) {
+            const updatedQualifications = [...updateForm.qualifications];
+            updatedQualifications[index][name] = value;
+            setUpdateForm({ ...updateForm, qualifications: updatedQualifications });
+        } else {
+            setUpdateForm({ ...updateForm, [name]: value });
         }
     };
 
-    // Handle edit button click
-    const handleEditClick = (teacher) => {
-        setEditingTeacher({ ...teacher });
-    };
-
-    const handleFieldChange = (field, value) => {
-        setEditingTeacher((prev) => ({ ...prev, [field]: value }));
+    // Handle Form Submission
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (selectedTeacher) {
+            fetch(baseUrl +`teachers/${selectedTeacher.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(updateForm),
+            })
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Failed to update teacher');
+                    }
+                    return response.json();
+                })
+                .then((updatedTeacher) => {
+                    console.log('Teacher updated successfully:', updatedTeacher);
+                    // Refresh the table data
+                    setData((prevData) =>
+                        prevData.map((teacher) =>
+                            teacher.id === updatedTeacher.id ? updatedTeacher : teacher
+                        )
+                    );
+                    setSelectedTeacher(null); // Close the form
+                })
+                .catch((error) => console.error('Error updating teacher:', error));
+        }
     };
 
     return (
-        <div style={{ padding: "20px", /*backgroundColor: "#f8f9fa",*/ minHeight: "100vh" }}>
-            <h1 className='header'>Teachers - {sectionFilter}</h1>
-
-            {/* Filter Section */}
-            <div style={{ marginBottom: "20px", textAlign: "center" }}>
-                {/* Section Filter */}
-                {["IELTS", "PTE", "OET"].map((section) => (
-                    <button
-                        key={section}
-                        onClick={() => setSectionFilter(section)}
-                        style={{
-                            padding: "10px 20px",
-                            margin: "0 10px",
-                            cursor: "pointer",
-                            backgroundColor: section === sectionFilter ? "#007bff" : "#e9ecef",
-                            color: section === sectionFilter ? "white" : "black",
-                            border: "none",
-                            borderRadius: "5px",
-                        }}
-                    >
-                        {section}
-                    </button>
-                ))}
-                {/* Section ID Filter */}
-                <input
-                    type="text"
-                    placeholder="Filter by Section ID"
-                    value={sectionIdFilter}
-                    onChange={(e) => setSectionIdFilter(e.target.value)}
-                    style={styles.filterInput}
-                />
-                {/* Teacher ID Filter */}
-                <input
-                    type="text"
-                    placeholder="Filter by Teacher ID"
-                    value={teacherIdFilter}
-                    onChange={(e) => setTeacherIdFilter(e.target.value)}
-                    style={styles.filterInput}
-                />
-            </div>
-
-            {/* Teachers Table */}
-            <div style={{ overflowX: "auto", backgroundColor: "white", padding: "20px", borderRadius: "8px",
-                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
-                    <thead>
-                    <tr style={{ backgroundColor: "#f1f1f1" }}>
-                        <th style={styles.tableHeader}>ID</th>
-                        <th style={styles.tableHeader}>Name</th>
-                        <th style={styles.tableHeader}>NIC</th>
-                        <th style={styles.tableHeader}>Phone Number</th>
-                        <th style={styles.tableHeader}>Section Name</th>
-                        <th style={styles.tableHeader}>Courses</th>
-                        <th style={styles.tableHeader}>Qualifications</th>
-                        <th style={styles.tableHeader}>Actions</th>
+        <div className="table-container">
+            <h1 className='header-style'>Teacher Records</h1>
+            <table className="teacher-table">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>NIC</th>
+                    <th>Phone Number</th>
+                    <th>Section</th>
+                    <th>Course Category</th>
+                    <th>Qualification</th>
+                    <th>Institute</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {data.map((teacher, index) => (
+                    <tr key={index}>
+                        <td>{teacher.name || 'N/A'}</td>
+                        <td>{teacher.nic || 'N/A'}</td>
+                        <td>{teacher.phoneNumber || 'N/A'}</td>
+                        <td>{teacher.section?.sectionName || 'N/A'}</td>
+                        <td>{teacher.courses?.[0]?.category || 'N/A'}</td>
+                        <td>{teacher.qualifications?.[0]?.qualification || 'N/A'}</td>
+                        <td>{teacher.qualifications?.[0]?.institute || 'N/A'}</td>
+                        <td>
+                            <button onClick={() => handleUpdateClick(teacher)}>Update</button>
+                        </td>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {filteredTeachers.length > 0 ? (
-                        filteredTeachers.map((teacher) => (
-                            <tr key={teacher.id}>
-                                <td style={styles.tableCell}>{teacher.id}</td>
-                                <td style={styles.tableCell}>{teacher.name}</td>
-                                <td style={styles.tableCell}>{teacher.nic}</td>
-                                <td style={styles.tableCell}>{teacher.phoneNumber}</td>
-                                <td style={styles.tableCell}>{teacher.sectionName}</td>
-                                <td style={styles.tableCell}>{teacher.courseNames.join(", ")}</td>
-                                <td style={styles.tableCell}>{teacher.qualifications.join(", ")}</td>
-                                <td style={styles.tableCell}>
-                                    <button
-                                        onClick={() => handleEditClick(teacher)}
-                                        style={{ padding: "5px 10px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "3px", cursor: "pointer" }}
-                                    >
-                                        Edit
-                                    </button>
-                                </td>
-                            </tr>
-                        ))
-                    ) : (
-                        <tr>
-                            <td colSpan="8" style={styles.noDataMessage}>
-                                No teachers available for the selected filters.
-                            </td>
-                        </tr>
-                    )}
-                    </tbody>
-                </table>
-            </div>
+                ))}
+                </tbody>
+            </table>
 
-            {/* Edit Form Modal */}
-            {editingTeacher && (
-                <div style={styles.modal}>
-                    <div style={styles.modalContent}>
-                        <h2>Edit Teacher</h2>
-                        <label>
-                            Name:
+            {/* Update Form */}
+            {selectedTeacher && (
+                <div className="update-form-container">
+                    <h1 className='header-style'>Update Teacher</h1>
+                    <form onSubmit={handleSubmit}>
+                        <div>
+                            <label>Name:</label>
                             <input
                                 type="text"
-                                value={editingTeacher.name}
-                                onChange={(e) => handleFieldChange("name", e.target.value)}
+                                name="name"
+                                value={updateForm.name}
+                                onChange={handleFormChange}
                             />
-                        </label>
-                        <label>
-                            NIC:
+                        </div>
+                        <div>
+                            <label>NIC:</label>
                             <input
                                 type="text"
-                                value={editingTeacher.nic}
-                                onChange={(e) => handleFieldChange("nic", e.target.value)}
+                                name="nic"
+                                value={updateForm.nic}
+                                onChange={handleFormChange}
                             />
-                        </label>
-                        <label>
-                            Phone Number:
+                        </div>
+                        <div>
+                            <label>Phone Number:</label>
                             <input
                                 type="text"
-                                value={editingTeacher.phoneNumber}
-                                onChange={(e) => handleFieldChange("phoneNumber", e.target.value)}
+                                name="phoneNumber"
+                                value={updateForm.phoneNumber}
+                                onChange={handleFormChange}
                             />
-                        </label>
-                        <label>
-                            Section Name:
-                            <select
-                                value={editingTeacher.sectionName}
-                                onChange={(e) => handleFieldChange("sectionName", e.target.value)}
-                            >
-                                <option value="IELTS">IELTS</option>
-                                <option value="PTE">PTE</option>
-                                <option value="OET">OET</option>
-                            </select>
-                        </label>
-                        <button onClick={() => handleUpdateTeacher(editingTeacher)} style={styles.saveButton}>
-                            Save
-                        </button>
-                        <button onClick={() => setEditingTeacher(null)} style={styles.cancelButton}>
+                        </div>
+                        <div>
+                            <label>Section ID:</label>
+                            <input
+                                type="number"
+                                name="sectionId"
+                                value={updateForm.sectionId}
+                                onChange={handleFormChange}
+                            />
+                        </div>
+                        <div>
+                            <label>Course IDs (comma-separated):</label>
+                            <input
+                                type="text"
+                                name="courseIds"
+                                value={updateForm.courseIds.join(',')}
+                                onChange={(e) =>
+                                    setUpdateForm({
+                                        ...updateForm,
+                                        courseIds: e.target.value.split(',').map(Number),
+                                    })
+                                }
+                            />
+                        </div>
+                        {updateForm.qualifications.map((qual, index) => (
+                            <div key={index}>
+                                <label>Qualification:</label>
+                                <input
+                                    type="text"
+                                    name="qualification"
+                                    value={qual.qualification}
+                                    onChange={(e) => handleFormChange(e, index)}
+                                />
+                                <label>Institute:</label>
+                                <input
+                                    type="text"
+                                    name="institute"
+                                    value={qual.institute}
+                                    onChange={(e) => handleFormChange(e, index)}
+                                />
+                            </div>
+                        ))}
+                        <button type="submit">Submit</button>
+                        <button
+                            type="button"
+                            onClick={() => setSelectedTeacher(null)}
+                            style={{ marginLeft: '10px' }}
+                        >
                             Cancel
                         </button>
-                    </div>
+                    </form>
                 </div>
             )}
         </div>
     );
 };
-
-const styles = {
-    filterInput: {
-        padding: "8px",
-        margin: "0 10px",
-        border: "1px solid #ddd",
-        borderRadius: "5px",
-    },
-    tableHeader: {
-        padding: "10px",
-        borderBottom: "2px solid #ddd",
-        fontWeight: "bold",
-    },
-    tableCell: {
-        padding: "10px",
-        borderBottom: "1px solid #ddd",
-    },
-    noDataMessage: {
-        padding: "20px",
-        textAlign: "center",
-        color: "#888",
-        fontStyle: "italic",
-    },
-    modal: {
-        position: "fixed",
-        top: "0",
-        left: "0",
-        width: "100%",
-        height: "100%",
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    modalContent: {
-        backgroundColor: "white",
-        padding: "20px",
-        borderRadius: "8px",
-        width: "400px",
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-    },
-    saveButton: {
-        backgroundColor: "#007bff",
-        color: "white",
-        padding: "10px 20px",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-        marginTop: "10px",
-    },
-    cancelButton: {
-        backgroundColor: "#ccc",
-        color: "black",
-        padding: "10px 20px",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-        marginLeft: "10px",
-        marginTop: "10px",
-    },
-};
-
 
 export default Teachers
