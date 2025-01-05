@@ -1,7 +1,11 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import "../Student.css"
+import {baseUrl} from "../../../assets/assets.js";
+import axios from "axios";
+
 
 const StudentRegisterIelts = () => {
+
     const [formData, setFormData] = useState({
         firstName: "",
         middleName: "",
@@ -13,7 +17,7 @@ const StudentRegisterIelts = () => {
             district: "",
             province: "",
         },
-        sectionId: "",
+        sectionId: 1,
         courseId: "",
         payment: {
             firstPaymentAmount: "",
@@ -22,6 +26,22 @@ const StudentRegisterIelts = () => {
     });
 
     const [errors, setErrors] = useState({});
+    const [setSelectedOption] = useState("");
+    const [courses, setCourses] = useState([]);
+    const [selectedCourseId, setSelectedCourseId] = useState(null);
+
+    useEffect(() => {
+        // Fetch courses from the API
+        axios
+            .get(baseUrl + "courses/section/1")
+            .then((response) => {
+                setCourses(response.data);
+            })
+            .catch((error) => {
+                console.error("Error fetching courses:", error);
+            });
+    }, []);
+
 
     // Validation logic
     const validate = () => {
@@ -54,7 +74,25 @@ const StudentRegisterIelts = () => {
     // Handle input changes
     const handleChange = (e) => {
         const {name, value} = e.target;
-        if (name.includes("address.")) {
+        /*Convert String to Int*/
+        if (name.includes("payment.")) {
+            // Extract the payment key (e.g., "firstPaymentAmount", "secondPaymentAmount")
+            const key = name.split(".")[1];
+            // Convert value to an integer or set to empty string if invalid
+            const intValue = value === "" ? "" : parseInt(value, 10);
+
+            setFormData((prev) => ({
+                ...prev,
+                payment: {...prev.payment, [key]: intValue},
+            }));
+        } else if (name === "sectionId") {
+            // Convert the value to an integer
+            const intValue = parseInt(value, 10) || ""; // Use empty string if value is NaN
+            setFormData((prev) => ({
+                ...prev,
+                [name]: intValue,
+            }));
+        } else if (name.includes("address.")) {
             const key = name.split(".")[1];
             setFormData((prev) => ({
                 ...prev,
@@ -81,7 +119,7 @@ const StudentRegisterIelts = () => {
             console.log("Form submitted:", formData);
             try {
                 const response = await fetch(
-                    "http://localhost:9090/gt/api/v1/students/IELTS00004",
+                    baseUrl + "students",
                     {
                         method: "POST",
                         headers: {
@@ -118,7 +156,7 @@ const StudentRegisterIelts = () => {
     return (
         <div className="form-container">
             <form onSubmit={handleSubmit}>
-                <h1>Students Registration - IELTS</h1>
+                <h1>Student Registration - PTE</h1>
 
                 {/* Personal Details */}
                 <label>First Name</label>
@@ -201,18 +239,34 @@ const StudentRegisterIelts = () => {
                     type="number"
                     name="sectionId"
                     value={formData.sectionId}
-                    onChange={handleChange}
+                    // onChange={handleChange}
+                    readOnly // Lock the field
+
                 />
                 {errors.sectionId && <span className="error">{errors.sectionId}</span>}
 
                 <label>Course ID</label>
-                <input
-                    type="number"
-                    name="courseId"
-                    value={formData.courseId}
-                    onChange={handleChange}
-                />
-                {errors.courseId && <span className="error">{errors.courseId}</span>}
+                <select
+                    id="courseDropdown"
+                    onChange={(e) => {
+                        const courseId = parseInt(e.target.value, 10); // Convert string to integer
+                        setSelectedCourseId(courseId);
+                        setFormData((prev) => ({
+                            ...prev,
+                            courseId: courseId,
+                        }));
+                    }}
+                    defaultValue=""
+                >
+                    <option value="" disabled>
+                        -- Choose a Course --
+                    </option>
+                    {courses.map((course) => (
+                        <option key={course.id} value={course.id}>
+                            {course.courseName}
+                        </option>
+                    ))}
+                </select>
 
                 {/* Payment Details */}
                 <label>First Payment Amount</label>
@@ -241,4 +295,5 @@ const StudentRegisterIelts = () => {
         </div>
     )
 }
+
 export default StudentRegisterIelts

@@ -1,12 +1,13 @@
 import React, {useState} from "react";
 import "../Teacher.css";
+import {baseUrl} from "../../../assets/assets.js";
 
 const TeacherRegisterIelts = () => {
     const [formData, setFormData] = useState({
         name: "",
         nic: "",
         phoneNumber: "",
-        sectionId: "",
+        sectionId: 1,
         courseIds: [],
         qualifications: [{qualification: "", institute: ""}],
     });
@@ -101,7 +102,7 @@ const TeacherRegisterIelts = () => {
 
         if (validateForm()) {
             try {
-                const response = await fetch("http://localhost:9090/gt/api/v1/teachers", {
+                const response = await fetch(baseUrl + "teachers", {
                     method: "POST",
                     headers: {"Content-Type": "application/json"},
                     body: JSON.stringify(formData),
@@ -175,7 +176,7 @@ const TeacherRegisterIelts = () => {
                         id="sectionId"
                         name="sectionId"
                         value={formData.sectionId}
-                        onChange={handleInputChange}
+                        readOnly
                     />
                     {errors.sectionId && <p className="error">{errors.sectionId}</p>}
 
