@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
-import { useTable } from "react-table";
+import React, {useEffect, useState} from "react";
+import {useTable} from "react-table";
 import axios from "axios";
 import "./Course.css";
-import { baseUrl } from "../../assets/assets.js";
+import {baseUrl} from "../../assets/assets.js";
 
 const Courses = () => {
     const [data, setData] = useState([]);
@@ -46,7 +46,7 @@ const Courses = () => {
         e.preventDefault();
 
         axios
-            .put(`http://localhost:9090/gt/api/v1/courses/${selectedCourse.id}`, selectedCourse)
+            .put(baseUrl + `courses/${selectedCourse.id}`, selectedCourse)
             .then((response) => {
                 // Update the data with the new response
                 setData((prevData) =>
@@ -64,7 +64,7 @@ const Courses = () => {
 
     // Handle form input change
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const {name, value} = e.target;
         setSelectedCourse((prevCourse) => ({
             ...prevCourse,
             [name]: name === "installment" ? e.target.checked : value, // Handle checkbox for installment
@@ -89,17 +89,17 @@ const Courses = () => {
             {
                 Header: "Course Fee",
                 accessor: "courseFee",
-                Cell: ({ value }) => `Rs. ${value.toFixed(2)}`, // Format fee
+                Cell: ({value}) => `Rs. ${value.toFixed(2)}`, // Format fee
             },
             {
                 Header: "Installment Available",
                 accessor: "installment",
-                Cell: ({ value }) => (value ? "Yes" : "No"),
+                Cell: ({value}) => (value ? "Yes" : "No"),
             },
             {
                 Header: "Update",
                 accessor: "update",
-                Cell: ({ row }) => {
+                Cell: ({row}) => {
                     const course = row.original; // Access the row's data
                     return (
                         <button
@@ -107,7 +107,7 @@ const Courses = () => {
                             style={{
                                 padding: "5px 10px",
                                 borderRadius: "5px",
-                                backgroundColor: "#4CAF50",
+                                backgroundColor: "Green",
                                 color: "white",
                                 border: "none",
                                 cursor: "pointer",
@@ -129,21 +129,21 @@ const Courses = () => {
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({ columns, data: filteredData });
+    } = useTable({columns, data: filteredData});
 
     return (
-        <div className="headers" style={{ padding: "53px", minHeight: "100vh" }}>
+        <div className="headers" style={{padding: "53px", minHeight: "100vh"}}>
             <div className="course-table-container">
                 <h1 className="header-style-1">Course Details</h1>
                 {/* Filter Section */}
-                <div style={{ marginBottom: "20px", textAlign: "left" }}>
+                <div style={{marginBottom: "20px", textAlign: "left"}}>
                     <input
                         id="filter"
                         placeholder="Filter by Course ID"
                         type="text"
                         value={filterText}
                         onChange={(e) => setFilterText(e.target.value)}
-                        style={{ marginBottom: "10px", padding: "5px", borderRadius: "10px" }}
+                        style={{marginBottom: "10px", padding: "5px", borderRadius: "10px"}}
                     />
                 </div>
                 <table {...getTableProps()} className="course-table">
@@ -164,11 +164,11 @@ const Courses = () => {
                     <tbody {...getTableBodyProps()}>
                     {rows.map((row) => {
                         prepareRow(row);
-                        const { key, ...rowProps } = row.getRowProps();
+                        const {key, ...rowProps} = row.getRowProps();
                         return (
                             <tr key={key} {...rowProps}>
                                 {row.cells.map((cell) => {
-                                    const { key: cellKey, ...cellProps } = cell.getCellProps();
+                                    const {key: cellKey, ...cellProps} = cell.getCellProps();
                                     return (
                                         <td key={cellKey} {...cellProps}>
                                             {cell.render("Cell")}
@@ -197,7 +197,7 @@ const Courses = () => {
                                     onChange={handleInputChange}
                                 />
                             </label>
-                            <br />
+                            <br/>
                             <label>
                                 Name:
                                 <input
@@ -207,7 +207,7 @@ const Courses = () => {
                                     onChange={handleInputChange}
                                 />
                             </label>
-                            <br />
+                            <br/>
                             <label>
                                 Fee:
                                 <input
@@ -217,8 +217,8 @@ const Courses = () => {
                                     onChange={handleInputChange}
                                 />
                             </label>
-                            <br />
-                            <label>
+                            <br/>
+                            <label className="inline-checkbox">
                                 Installment Available:
                                 <input
                                     type="checkbox"
@@ -227,12 +227,12 @@ const Courses = () => {
                                     onChange={handleInputChange}
                                 />
                             </label>
-                            <br />
+                            <br/>
                             <button type="submit">Save</button>
                             <button
                                 type="button"
                                 onClick={() => setIsModalOpen(false)}
-                                style={{ marginLeft: "10px" }}
+                                style={{marginLeft: "10px"}}
                             >
                                 Cancel
                             </button>

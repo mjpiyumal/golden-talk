@@ -1,8 +1,14 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import "../Teacher.css";
 import {baseUrl} from "../../../assets/assets.js";
+import axios from "axios";
+import Select from 'react-select';
 
 const TeacherRegisterIelts = () => {
+    const [errors, setErrors] = useState({}); // To track validation errors
+    const [message, setMessage] = useState("");
+    const [options, setOptions] = useState([]);
+    const [selectedCourses, setSelectedCourses] = useState([]);
     const [formData, setFormData] = useState({
         name: "",
         nic: "",
@@ -12,8 +18,33 @@ const TeacherRegisterIelts = () => {
         qualifications: [{qualification: "", institute: ""}],
     });
 
-    const [errors, setErrors] = useState({}); // To track validation errors
-    const [message, setMessage] = useState("");
+    useEffect(() => {
+        // Fetch data from the API
+        const fetchCourses = async () => {
+            try {
+                const response =
+                    await axios.get(baseUrl + 'courses/section/1');
+                const courses = response.data;
+
+                // Map courses to dropdown options
+                const formattedOptions = courses.map(course => ({
+                    value: course.id,
+                    label: `${course.courseName} - ${course.category}`,
+                }));
+
+                setOptions(formattedOptions);
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            }
+        };
+
+        fetchCourses();
+    }, []);
+
+    // Handle selection change
+    const handleSelectionChange = (selectedOptions) => {
+        setSelectedCourses(selectedOptions.map(option => option.value));
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -102,11 +133,18 @@ const TeacherRegisterIelts = () => {
 
         if (validateForm()) {
             try {
+                // Update the formData with selected course IDs
+                const updatedFormData = {
+                    ...formData,
+                    courseIds: selectedCourses, // Include selected course IDs
+                };
+
                 const response = await fetch(baseUrl + "teachers", {
                     method: "POST",
-                    headers: {"Content-Type": "application/json"},
-                    body: JSON.stringify(formData),
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedFormData), // Use the updated formData
                 });
+
                 if (response.ok) {
                     setMessage("Form submitted successfully!");
                     setFormData({
@@ -115,8 +153,9 @@ const TeacherRegisterIelts = () => {
                         phoneNumber: "",
                         sectionId: "",
                         courseIds: [],
-                        qualifications: [{qualification: "", institute: ""}],
+                        qualifications: [{ qualification: "", institute: "" }],
                     });
+                    setSelectedCourses([]); // Reset selected courses
                     setErrors({});
                 } else {
                     setMessage("An error occurred while submitting the form.");
@@ -128,6 +167,7 @@ const TeacherRegisterIelts = () => {
             setMessage("Please fix the validation errors.");
         }
     };
+
 
     return (
         <div className="form-container">
@@ -183,19 +223,11 @@ const TeacherRegisterIelts = () => {
                     {/*Course Section */}
                     <label>
                         Course IDs (comma-separated):
-                        <input
-                            type="text"
-                            name="courseIds"
-                            value={formData.courseIds.join(",")}
-                            onChange={(e) =>
-                                setFormData({
-                                    ...formData,
-                                    courseIds: e.target.value
-                                        .split(",") // Split the string into an array
-                                        .map((id) => parseInt(id.trim(), 10)) // Trim whitespace and convert to integer
-                                        .filter((id) => !isNaN(id)) // Filter out invalid numbers
-                                })
-                            }
+                        <Select
+                            options={options}
+                            isMulti
+                            onChange={handleSelectionChange}
+                            placeholder="Select courses"
                         />
                         {errors.courseIds && <p className="error">{errors.courseIds}</p>}
                     </label>

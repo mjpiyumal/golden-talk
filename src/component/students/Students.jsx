@@ -86,11 +86,6 @@ const Students = () => {
         student.studentId.toString().includes(filterText)
     );
 
-    // Filter data based on firstName
-    const filteredName = data.filter(student =>
-        student.firstName.toString().includes(filterText)
-    );
-
     // Define columns
     const columns = React.useMemo(
         () => [
@@ -104,13 +99,13 @@ const Students = () => {
             {
                 Header: "First Payment Amount",
                 accessor: "firstPaymentAmount",
-                Cell: ({ value }) => `Rs. ${value.toFixed(2)}`,
+                Cell: ({ value }) => `Rs. ${(value || 0).toFixed(2)}`,
             },
             {
                 Header: "Second Payment Amount",
                 accessor: "secondPaymentAmount",
                 Cell: ({ row, value }) => {
-                    const [editValue, setEditValue] = useState(value);
+                    const [editValue, setEditValue] = useState(value || 0);
 
                     return (
                         <input
@@ -120,7 +115,7 @@ const Students = () => {
                             onBlur={() =>
                                 handleSecondPaymentBlur(
                                     row.original.studentId,
-                                    1, // Assuming courseId is 1, replace with dynamic if necessary
+                                    1, // Replace with actual courseId if needed
                                     parseFloat(editValue)
                                 )
                             }
@@ -161,7 +156,7 @@ const Students = () => {
         headerGroups,
         rows,
         prepareRow,
-    } = useTable({ columns, data:filteredData, data1: filteredName});
+    } = useTable({ columns, data:filteredData});
 
     return (
         <div className="student-table-container">

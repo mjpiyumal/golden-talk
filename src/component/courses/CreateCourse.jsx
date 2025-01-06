@@ -66,8 +66,9 @@ const CreateCourse = () => {
 
     return (
         <div className="course-container">
-            <h1>Add Course</h1>
+            <h1 className="header-style-1">Course Details</h1>
             <form onSubmit={handleSubmit} className="course-form">
+                <h1>Course Register</h1>
                 <div className="form-group">
                     <label>Category</label>
                     <input
@@ -114,10 +115,11 @@ const CreateCourse = () => {
                     {errors.sectionId && <div className="error">{errors.sectionId}</div>}
                 </div>
 
-                <div className="form-group">
-                    <label>Installment</label>
+                <div className="inline-checkbox">
+                    <label htmlFor="installment">Installment</label>
                     <input
                         type="checkbox"
+                        id="installment"
                         name="installment"
                         checked={formData.installment}
                         onChange={handleChange}

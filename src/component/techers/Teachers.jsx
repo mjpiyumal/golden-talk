@@ -1,5 +1,6 @@
 import {useState, useEffect} from "react";
 import "./Teacher.css"
+import {baseUrl} from "../../assets/assets.js";
 
 const Teachers = () => {
     const [data, setData] = useState([]);
@@ -18,7 +19,7 @@ const Teachers = () => {
 
     // Fetch data
     useEffect(() => {
-        fetch('http://localhost:9090/gt/api/v1/teachers')
+        fetch(baseUrl + 'teachers')
             .then((response) => response.json())
             .then((data) => {
                 console.log(data); // Debug: Log the fetched data
@@ -70,7 +71,7 @@ const Teachers = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         if (selectedTeacher) {
-            fetch(`http://localhost:9090/gt/api/v1/teachers/${selectedTeacher.id}`, {
+            fetch(baseUrl + `teachers/${selectedTeacher.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

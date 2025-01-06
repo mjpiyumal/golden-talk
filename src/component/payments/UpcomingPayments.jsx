@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
-import "./Payments.css"; // Import the CSS file
+import React, {useState, useEffect} from "react";
+import "./Payments.css";
+import {baseUrl} from "../../assets/assets.js"; // Import the CSS file
 
 const UpcomingPayments = () => {
     const [data, setData] = useState([]);
@@ -10,7 +11,7 @@ const UpcomingPayments = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch("http://localhost:9090/gt/api/v1/students/notifications");
+                const response = await fetch(baseUrl + "students/notifications");
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
