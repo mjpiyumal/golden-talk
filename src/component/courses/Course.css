@@ -145,3 +145,12 @@ button:hover {
     vertical-align: middle;
     margin-right: 8px; /* Adjust spacing if needed */
 }
+
+.update-btn {
+    padding: 5px 10px;
+    borderRadius: 5px;
+    backgroundColor: Green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

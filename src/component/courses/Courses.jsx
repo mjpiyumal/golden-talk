@@ -104,15 +104,7 @@ const Courses = () => {
                     return (
                         <button
                             onClick={() => handleUpdateClick(course)}
-                            style={{
-                                padding: "5px 10px",
-                                borderRadius: "5px",
-                                backgroundColor: "Green",
-                                color: "white",
-                                border: "none",
-                                cursor: "pointer",
-                            }}
-                        >
+                            className='update-btn'>
                             Update
                         </button>
                     );
