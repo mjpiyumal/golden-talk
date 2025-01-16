@@ -1,10 +1,14 @@
 import React, {useEffect, useState} from "react";
 import "../Teacher.css";
-import {baseUrl} from "../../../assets/assets.js";
+import {baseUrl, sectionNameIelts} from "../../../assets/assets.js";
 import axios from "axios";
 import Select from 'react-select';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 const TeacherRegisterIelts = () => {
+    const sectionName = sectionNameIelts;
     const [errors, setErrors] = useState({}); // To track validation errors
     const [message, setMessage] = useState("");
     const [options, setOptions] = useState([]);
@@ -146,7 +150,17 @@ const TeacherRegisterIelts = () => {
                 });
 
                 if (response.ok) {
-                    setMessage("Form submitted successfully!");
+                    // setMessage("Form submitted successfully!");
+                    toast.success("Form submitted successfully!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
                     setFormData({
                         name: "",
                         nic: "",
@@ -164,7 +178,16 @@ const TeacherRegisterIelts = () => {
                 setMessage("An error occurred while submitting the form.");
             }
         } else {
-            setMessage("Please fix the validation errors.");
+            toast.error("Please fix the validation errors.", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }
     };
 
@@ -210,12 +233,20 @@ const TeacherRegisterIelts = () => {
                     {errors.phoneNumber && <p className="error">{errors.phoneNumber}</p>}
 
                     {/* Section ID */}
-                    <label htmlFor="sectionId">Section ID:</label>
+                    {/*<label htmlFor="sectionId">Section ID:</label>*/}
+                    {/*<input*/}
+                    {/*    type="text"*/}
+                    {/*    id="sectionId"*/}
+                    {/*    name="sectionId"*/}
+                    {/*    value={formData.sectionId}*/}
+                    {/*    readOnly*/}
+                    {/*/>*/}
+                    {/*{errors.sectionId && <p className="error">{errors.sectionId}</p>}*/}
+                    <label>Section Name:</label>
                     <input
                         type="text"
-                        id="sectionId"
-                        name="sectionId"
-                        value={formData.sectionId}
+                        name="sectionName"
+                        value={sectionName}
                         readOnly
                     />
                     {errors.sectionId && <p className="error">{errors.sectionId}</p>}
@@ -297,6 +328,7 @@ const TeacherRegisterIelts = () => {
                     Submit
                 </button>
             </form>
+            <ToastContainer />
         </div>
     );
 };

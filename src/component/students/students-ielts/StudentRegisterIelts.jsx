@@ -1,29 +1,33 @@
 import React, {useEffect, useState} from 'react'
 import "../Student.css"
-import {baseUrl} from "../../../assets/assets.js";
+import {baseUrl, sectionIdIelts, sectionNameIelts} from "../../../assets/assets.js";
 import axios from "axios";
-
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const StudentRegisterIelts = () => {
 
+    const sectionName = sectionNameIelts;
     const [formData, setFormData] = useState({
         firstName: "",
         middleName: "",
         lastName: "",
         whatsAppNumber: "",
+        nic: "",
         address: {
             street: "",
             city: "",
             district: "",
             province: "",
         },
-        sectionId: 1,
+        sectionId: sectionIdIelts,
         courseId: "",
         payment: {
             firstPaymentAmount: "",
             secondPaymentAmount: "",
         },
     });
+
 
     const [errors, setErrors] = useState({});
     const [setSelectedOption] = useState("");
@@ -33,7 +37,7 @@ const StudentRegisterIelts = () => {
     useEffect(() => {
         // Fetch courses from the API
         axios
-            .get(baseUrl + "courses/section/1")
+            .get(baseUrl + "courses/section/" + sectionIdIelts)
             .then((response) => {
                 setCourses(response.data);
             })
@@ -54,6 +58,11 @@ const StudentRegisterIelts = () => {
         } else if (!/^\+?[0-9]{10,15}$/.test(formData.whatsAppNumber)) {
             newErrors.whatsAppNumber = "Enter a valid phone number (e.g., +94712345678).";
         }
+        if (!formData.nic) newErrors.nic = "NIC is required.";
+        // Check NIC
+        if (!formData.nic.trim() || formData.nic.length < 10) {
+            newErrors.nic = "NIC must be at least 10 characters.";
+        }
 
         if (!formData.address.street) newErrors.street = "Street is required.";
         if (!formData.address.city) newErrors.city = "City is required.";
@@ -64,7 +73,7 @@ const StudentRegisterIelts = () => {
         if (!formData.courseId) newErrors.courseId = "Course ID is required.";
 
         if (!formData.payment.firstPaymentAmount) {
-            newErrors.firstPaymentAmount = "First payment amount is required.";
+            newErrors.firstPaymentAmount = "Payment amount is required.";
         }
 
         setErrors(newErrors);
@@ -133,6 +142,18 @@ const StudentRegisterIelts = () => {
                 console.log("Response status:", response.status);
 
                 if (response.ok) {
+
+                    toast.success("Form submitted successfully!", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+
                     const responseData = await response.json();
                     // Log the success response
                     console.log("Response data:", responseData);
@@ -148,15 +169,25 @@ const StudentRegisterIelts = () => {
                 console.error("Error during submission:", error);
                 // setMessage(`Error: ${error.message}`);
             }
-            alert("Form submitted successfully!");
+            // alert("Form submitted successfully!");
         } else {
-            alert("Please fix the errors in the form.");
+            // alert("Please fix the errors in the form.");
+            toast.error("Please fix the validation errors.", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }
     };
     return (
         <div className="form-container">
             <form onSubmit={handleSubmit}>
-                <h1>Student Registration - PTE</h1>
+                <h1>Student Registration - IELTS</h1>
 
                 {/* Personal Details */}
                 <label>First Name</label>
@@ -185,6 +216,17 @@ const StudentRegisterIelts = () => {
                 />
                 {errors.lastName && <span className="error">{errors.lastName}</span>}
 
+                {/* NIC */}
+                <label htmlFor="nic">NIC:</label>
+                <input
+                    type="text"
+                    id="nic"
+                    name="nic"
+                    value={formData.nic}
+                    onChange={handleChange}
+                />
+                {errors.nic && <p className="error">{errors.nic}</p>}
+
                 <label>WhatsApp Number</label>
                 <input
                     type="text"
@@ -197,23 +239,23 @@ const StudentRegisterIelts = () => {
                 )}
 
                 {/* Address Section */}
-                <label>Street</label>
-                <input
-                    type="text"
-                    name="address.street"
-                    value={formData.address.street}
-                    onChange={handleChange}
-                />
-                {errors.street && <span className="error">{errors.street}</span>}
+                {/*<label>Street</label>*/}
+                {/*<input*/}
+                {/*    type="text"*/}
+                {/*    name="address.street"*/}
+                {/*    value={formData.address.street}*/}
+                {/*    onChange={handleChange}*/}
+                {/*/>*/}
+                {/*{errors.street && <span className="error">{errors.street}</span>}*/}
 
-                <label>City</label>
-                <input
-                    type="text"
-                    name="address.city"
-                    value={formData.address.city}
-                    onChange={handleChange}
-                />
-                {errors.city && <span className="error">{errors.city}</span>}
+                {/*<label>City</label>*/}
+                {/*<input*/}
+                {/*    type="text"*/}
+                {/*    name="address.city"*/}
+                {/*    value={formData.address.city}*/}
+                {/*    onChange={handleChange}*/}
+                {/*/>*/}
+                {/*{errors.city && <span className="error">{errors.city}</span>}*/}
 
                 <label>District</label>
                 <input
@@ -234,11 +276,11 @@ const StudentRegisterIelts = () => {
                 {errors.province && <span className="error">{errors.province}</span>}
 
                 {/* Course Details */}
-                <label>Section ID</label>
+                <label>Section Name</label>
                 <input
-                    type="number"
+                    type="text"
                     name="sectionId"
-                    value={formData.sectionId}
+                    value={sectionName}
                     // onChange={handleChange}
                     readOnly // Lock the field
 
@@ -269,7 +311,7 @@ const StudentRegisterIelts = () => {
                 </select>
 
                 {/* Payment Details */}
-                <label>First Payment Amount</label>
+                <label>Payment Amount</label>
                 <input
                     type="number"
                     name="payment.firstPaymentAmount"
@@ -280,18 +322,19 @@ const StudentRegisterIelts = () => {
                     <span className="error">{errors.firstPaymentAmount}</span>
                 )}
 
-                <label>Second Payment Amount</label>
-                <input
-                    type="number"
-                    name="payment.secondPaymentAmount"
-                    value={formData.payment.secondPaymentAmount}
-                    onChange={handleChange}
-                />
+                {/*<label>Second Payment Amount</label>*/}
+                {/*<input*/}
+                {/*    type="number"*/}
+                {/*    name="payment.secondPaymentAmount"*/}
+                {/*    value={formData.payment.secondPaymentAmount}*/}
+                {/*    onChange={handleChange}*/}
+                {/*/>*/}
 
                 <button type="submit" className="submit-button">
                     Submit
                 </button>
             </form>
+            <ToastContainer/>
         </div>
     )
 }

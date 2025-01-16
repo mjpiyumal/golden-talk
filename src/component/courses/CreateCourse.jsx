@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Course.css";
-import {baseUrl} from "../../assets/assets.js";
+import {baseUrl, sectionIdIelts} from "../../assets/assets.js";
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateCourse = () => {
     const [formData, setFormData] = useState({
-        category: "",
+        category: "simple",
         name: "",
         fee: "",
-        sectionId: "",
+        sectionId: sectionIdIelts,
         installment: false,
     });
 
@@ -50,7 +53,16 @@ const CreateCourse = () => {
         axios
             .post(baseUrl + "courses", courseData)
             .then((response) => {
-                alert("Course added successfully");
+                toast.success("Course Created successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
                 setFormData({
                     category: "",
                     name: "",
@@ -109,8 +121,9 @@ const CreateCourse = () => {
                         type="number"
                         name="sectionId"
                         value={formData.sectionId}
-                        onChange={handleChange}
-                        min="1"
+                        // onChange={handleChange}
+                        // min="1"
+                        readOnly
                     />
                     {errors.sectionId && <div className="error">{errors.sectionId}</div>}
                 </div>
@@ -128,6 +141,7 @@ const CreateCourse = () => {
 
                 <button type="submit">Submit</button>
             </form>
+            <ToastContainer />
         </div>
     );
 };
