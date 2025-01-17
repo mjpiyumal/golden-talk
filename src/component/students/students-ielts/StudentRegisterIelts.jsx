@@ -16,10 +16,10 @@ const StudentRegisterIelts = () => {
         nic: "",
         email: "",
         address: {
-            street: "",
-            city: "",
+            street: "N/A",
+            city: "N/A",
             district: "",
-            province: "",
+            province: "N/A",
         },
         sectionId: sectionIdIelts,
         courseId: "",
