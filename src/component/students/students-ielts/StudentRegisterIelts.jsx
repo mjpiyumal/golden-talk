@@ -56,7 +56,7 @@ const StudentRegisterIelts = () => {
         if (!formData.lastName) newErrors.lastName = "Last name is required.";
         if (!formData.whatsAppNumber) {
             newErrors.whatsAppNumber = "WhatsApp number is required.";
-        } else if (!/^\+?[0-9]{10,15}$/.test(formData.whatsAppNumber)) {
+        } else if (/^\\+[1-9]\\d{1,14}$/.test(formData.whatsAppNumber)) {
             newErrors.whatsAppNumber = "Enter a valid phone number (e.g., +94712345678).";
         }
         if (!formData.nic) newErrors.nic = "NIC is required.";
