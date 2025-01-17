@@ -105,10 +105,15 @@ const TeacherRegisterIelts = () => {
         }
 
         // Check Phone Number
-        if (
-            !formData.phoneNumber.trim() ||
-            /^\\+[1-9]\\d{1,14}$/.test(formData.phoneNumber)
-        ) {
+        // if (!formData.phoneNumber.trim() ||
+        //     /^\\+[1-9]\\d{1,14}$/.test(formData.phoneNumber)
+        // ) {
+        //     newErrors.phoneNumber = "Enter a valid phone number (e.g., +94712345678).";
+        // }
+
+        if (!formData.phoneNumber) {
+            newErrors.phoneNumber = "WhatsApp number is required.";
+        } else if (/^\\+[1-9]\\d{1,14}$/.test(formData.whatsAppNumber)) {
             newErrors.phoneNumber = "Enter a valid phone number (e.g., +94712345678).";
         }
 
@@ -204,7 +209,7 @@ const TeacherRegisterIelts = () => {
                     });
                 }
             } catch (error) {
-                setMessage("An error occurred while submitting the form.");
+                console.error("Error during submission:", error);
             }
         } else {
             toast.error("Please fix the validation errors.", {
