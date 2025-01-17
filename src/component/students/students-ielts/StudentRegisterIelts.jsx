@@ -66,8 +66,8 @@ const StudentRegisterIelts = () => {
         }
         if (!formData.email) {
             newErrors.email = "Email is required.";
-        } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-            newErrors.whatsAppNumber = "Enter a valid email Id (e.g., test@example.com).";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.email = "Enter a valid email Id (e.g., test@example.com).";
         }
         if (!formData.address.street) newErrors.street = "Street is required.";
         if (!formData.address.city) newErrors.city = "City is required.";
@@ -146,6 +146,22 @@ const StudentRegisterIelts = () => {
                 // Log the response status
                 console.log("Response status:", response.status);
 
+                if (response && response.status === 409) {
+                    const errorData = await response.json();  // Correctly parse the JSON response
+
+                    // Show the error message in the toast
+                    toast.error(errorData.errorMessage, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                }
+
                 if (response.ok) {
 
                     toast.success("Form submitted successfully!", {
@@ -172,7 +188,15 @@ const StudentRegisterIelts = () => {
             } catch (error) {
                 // Log the error details
                 console.error("Error during submission:", error);
+
                 // setMessage(`Error: ${error.message}`);
+                if (error.response && error.response.status === 409) {
+                    // Display backend error message
+                    console.log(error.response.data.errorMessage); // This is the error message from backend
+                    setErrors({ email: error.response.data.errorMessage }); // If you want to display in form
+                } else {
+                    console.error("Error:", error);
+                }
             }
             // alert("Form submitted successfully!");
         } else {
@@ -282,14 +306,14 @@ const StudentRegisterIelts = () => {
                 />
                 {errors.district && <span className="error">{errors.district}</span>}
 
-                <label>Province</label>
-                <input
-                    type="text"
-                    name="address.province"
-                    value={formData.address.province}
-                    onChange={handleChange}
-                />
-                {errors.province && <span className="error">{errors.province}</span>}
+                {/*<label>Province</label>*/}
+                {/*<input*/}
+                {/*    type="text"*/}
+                {/*    name="address.province"*/}
+                {/*    value={formData.address.province}*/}
+                {/*    onChange={handleChange}*/}
+                {/*/>*/}
+                {/*{errors.province && <span className="error">{errors.province}</span>}*/}
 
                 {/* Course Details */}
                 <label>Section Name</label>

@@ -107,9 +107,9 @@ const TeacherRegisterIelts = () => {
         // Check Phone Number
         if (
             !formData.phoneNumber.trim() ||
-            !/^\d{10}$/.test(formData.phoneNumber)
+            /^\\+[1-9]\\d{1,14}$/.test(formData.phoneNumber)
         ) {
-            newErrors.phoneNumber = "Phone Number must be 10 digits.";
+            newErrors.phoneNumber = "Enter a valid phone number (e.g., +94712345678).";
         }
 
         // Check Section ID
@@ -149,6 +149,22 @@ const TeacherRegisterIelts = () => {
                     body: JSON.stringify(updatedFormData), // Use the updated formData
                 });
 
+                if (response && response.status === 409) {
+                    const errorData = await response.json();  // Correctly parse the JSON response
+
+                    // Show the error message in the toast
+                    toast.error(errorData.errorMessage, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
+                }
+
                 if (response.ok) {
                     // setMessage("Form submitted successfully!");
                     toast.success("Form submitted successfully!", {
@@ -172,7 +188,20 @@ const TeacherRegisterIelts = () => {
                     setSelectedCourses([]); // Reset selected courses
                     setErrors({});
                 } else {
-                    setMessage("An error occurred while submitting the form.");
+                    // setMessage("An error occurred while submitting the form.");
+                    const errorData = await response.json();  // Correctly parse the JSON response
+
+                    // Show the error message in the toast
+                    toast.error(errorData.errorMessage, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        theme: "colored",
+                    });
                 }
             } catch (error) {
                 setMessage("An error occurred while submitting the form.");
