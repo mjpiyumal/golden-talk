@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./Course.css";
-import {baseUrl, sectionIdIelts} from "../../assets/assets.js";
+import {baseUrl, sectionIdIelts, sectionNameIelts} from "../../assets/assets.js";
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const CreateCourse = () => {
+    const sectionName = sectionNameIelts;
     const [formData, setFormData] = useState({
         category: "",
         name: "",
@@ -126,11 +127,11 @@ const CreateCourse = () => {
                 </div>
 
                 <div className="form-group">
-                    <label>Section ID</label>
+                    <label>Section Name</label>
                     <input
-                        type="number"
-                        name="sectionId"
-                        value={formData.sectionId}
+                        type="text"
+                        name="sectionName"
+                        value={sectionName}
                         // onChange={handleChange}
                         // min="1"
                         readOnly
