@@ -14,6 +14,7 @@ const StudentRegisterIelts = () => {
         lastName: "",
         whatsAppNumber: "",
         nic: "",
+        email: "",
         address: {
             street: "",
             city: "",
@@ -63,7 +64,11 @@ const StudentRegisterIelts = () => {
         if (!formData.nic.trim() || formData.nic.length < 10) {
             newErrors.nic = "NIC must be at least 10 characters.";
         }
-
+        if (!formData.email) {
+            newErrors.email = "Email is required.";
+        } else if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+            newErrors.whatsAppNumber = "Enter a valid email Id (e.g., test@example.com).";
+        }
         if (!formData.address.street) newErrors.street = "Street is required.";
         if (!formData.address.city) newErrors.city = "City is required.";
         if (!formData.address.district) newErrors.district = "District is required.";
@@ -172,7 +177,7 @@ const StudentRegisterIelts = () => {
             // alert("Form submitted successfully!");
         } else {
             // alert("Please fix the errors in the form.");
-            toast.error("Please fix the validation errors.", {
+            toast.error("Please fill the all required fields.", {
                 position: "top-right",
                 autoClose: 3000,
                 hideProgressBar: false,
@@ -226,6 +231,17 @@ const StudentRegisterIelts = () => {
                     onChange={handleChange}
                 />
                 {errors.nic && <p className="error">{errors.nic}</p>}
+
+                {/*Email*/}
+                <label htmlFor="email">Email:</label>
+                <input
+                    type="text"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                />
+                {errors.email && <p className="error">{errors.email}</p>}
 
                 <label>WhatsApp Number</label>
                 <input

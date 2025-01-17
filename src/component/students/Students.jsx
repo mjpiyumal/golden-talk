@@ -33,6 +33,7 @@ const Students = () => {
                     lastName: student.lastName || "",
                     whatsAppNum: student.whatsAppNum || "",
                     nic: student.nic || "N/A",
+                    email: student.email || "N/A",
                     section: student.section.join(", ") || "N/A",
                     course: student.course.join(", ") || "N/A",
                     paymentStatus: student.payments[0]?.paymentStatus || "N/A",
@@ -109,7 +110,8 @@ const Students = () => {
             {Header: "Last Name", accessor: "lastName"},
             {Header: "WhatsApp Number", accessor: "whatsAppNum"},
             {Header: "NIC", accessor: "nic"},
-            {Header: "Section", accessor: "section"},
+            {Header: "Email", accessor: "email"},
+            // {Header: "Section", accessor: "section"},
             {Header: "Course", accessor: "course"},
             {Header: "Payment Status", accessor: "paymentStatus"},
             {

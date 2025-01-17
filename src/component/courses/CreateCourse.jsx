@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const CreateCourse = () => {
     const [formData, setFormData] = useState({
-        category: "simple",
+        category: "",
         name: "",
         fee: "",
         sectionId: sectionIdIelts,
@@ -19,11 +19,13 @@ const CreateCourse = () => {
 
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
+
         setFormData((prev) => ({
             ...prev,
             [name]: type === "checkbox" ? checked : value,
         }));
     };
+
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -83,12 +85,20 @@ const CreateCourse = () => {
                 <h1>Course Register</h1>
                 <div className="form-group">
                     <label>Category</label>
-                    <input
-                        type="text"
-                        name="category"
+                    <select
+                        id="section-select"
+                        name="category"    // ✅ Added name attribute to bind with formData
                         value={formData.category}
                         onChange={handleChange}
-                    />
+                    >
+                        <option value="">-- Select Category --</option>
+                        <option value="simple">Simple</option>
+                        <option value="package">Package</option>
+                        <option value="seminar">Seminar</option>
+                    </select>
+
+
+                    <p>Selected Section: {formData.category}</p>
                     {errors.category && <div className="error">{errors.category}</div>}
                 </div>
 
