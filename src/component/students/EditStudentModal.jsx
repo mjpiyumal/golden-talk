@@ -9,6 +9,7 @@ const EditStudentModal = ({ student, onClose, onSave }) => {
         middleName: student.middleName,
         lastName: student.lastName,
         whatsAppNumber: student.whatsAppNum,
+        email: student.email || "N/A",
         sectionId: student.section.split(",").map(Number),
         courseIds: student.course.split(",").map(Number),
     });
@@ -31,6 +32,8 @@ const EditStudentModal = ({ student, onClose, onSave }) => {
             })
             .then((response) => {
                 onSave(response.data);
+                /*Reload the webpage*/
+                window.location.reload();
             })
             .catch((error) => {
                 console.error("Error updating student:", error);

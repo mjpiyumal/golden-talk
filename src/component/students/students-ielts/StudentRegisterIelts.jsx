@@ -54,11 +54,13 @@ const StudentRegisterIelts = () => {
 
         if (!formData.firstName) newErrors.firstName = "First name is required.";
         if (!formData.lastName) newErrors.lastName = "Last name is required.";
+        
         if (!formData.whatsAppNumber) {
-            newErrors.whatsAppNumber = "WhatsApp number is required.";
+            newErrors.whatsAppNumber = "Email is required.";
         } else if (/^\\+[1-9]\\d{1,14}$/.test(formData.whatsAppNumber)) {
             newErrors.whatsAppNumber = "Enter a valid phone number (e.g., +94712345678).";
         }
+
         if (!formData.nic) newErrors.nic = "NIC is required.";
         // Check NIC
         if (!formData.nic.trim() || formData.nic.length < 10) {
@@ -69,6 +71,7 @@ const StudentRegisterIelts = () => {
         } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
             newErrors.email = "Enter a valid email Id (e.g., test@example.com).";
         }
+
         if (!formData.address.street) newErrors.street = "Street is required.";
         if (!formData.address.city) newErrors.city = "City is required.";
         if (!formData.address.district) newErrors.district = "District is required.";
