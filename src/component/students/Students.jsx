@@ -37,6 +37,7 @@ const Students = () => {
                     email: student.email || "N/A",
                     section: student.section[0]?.sectionName || "N/A",
                     course: student.course[0]?.courseName || "N/A",
+                    courseFees: student.course[0]?.courseFee || "N/A",
                     courseId: student.course[0]?.id || 0,
                     paymentStatus: student.payments[0]?.paymentStatus || "N/A",
                     firstPaymentAmount: student.payments[0]?.firstPaymentAmount || 0,
@@ -117,13 +118,14 @@ const Students = () => {
     const columns = React.useMemo(
         () => [
             {Header: "First Name", accessor: "firstName"},
-            {Header: "Middle Name", accessor: "middleName"},
+            // {Header: "Middle Name", accessor: "middleName"},
             {Header: "Last Name", accessor: "lastName"},
             {Header: "WhatsApp Number", accessor: "whatsAppNum"},
             {Header: "NIC", accessor: "nic"},
             {Header: "Email", accessor: "email"},
             // {Header: "Section", accessor: "section"},
             {Header: "Course", accessor: "course"},
+            {Header: "CourseFee", accessor: "courseFees"},
             {Header: "Payment Status", accessor: "paymentStatus"},
             {
                 Header: "First Payment Amount",
