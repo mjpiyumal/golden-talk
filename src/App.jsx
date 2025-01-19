@@ -13,7 +13,6 @@ import Courses from "./component/courses/Courses.jsx";
 import CreateCourse from "./component/courses/CreateCourse.jsx";
 import UpcomingPayments from "./component/payments/UpcomingPayments.jsx";
 import DelayPayments from "./component/payments/DelayPayments.jsx";
-import SignUp from "./component/authentication/SignUp.jsx";
 
 
 function App() {
@@ -50,7 +49,7 @@ function App() {
                     <Route path="/teacher-register-oet" element={<TeacherRegisterOet/>}/>
 
                     {/*SignUp*/}
-                    <Route path="/sign-up" element={<SignUp/>}/>
+                    {/*<Route path="/sign-up" element={<SignUp/>}/>*/}
 
                 </Routes>
             </Router>
