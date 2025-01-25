@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import './Payments.css'; // Import the CSS file
+import './Payments.css';
+import {baseUrl} from "../../assets/assets.js"; // Import the CSS file
 
 const DelayPayments = () => {
     const [students, setStudents] = useState([]);
 
     useEffect(() => {
-        axios.get('http://localhost:9090/gt/api/v1/students/delaying')
+        axios.get(baseUrl + 'students/delaying')
             .then(response => {
                 setStudents(response.data);
             })
