@@ -77,27 +77,21 @@ const Courses = () => {
         <div className='headers' style={{padding: "53px", minHeight: "100vh"}}>
             {/*<h1 >Course Table</h1>*/}
 
-            {/* Filter Section */}
-            <div style={{ marginBottom: "20px", textAlign: "center" }}>
-                {/*<label htmlFor="filter">Filter by Course ID: </label>*/}
-                <input
-                    id="filter"
-                    placeholder="Filter by Course ID"
-                    type="text"
-                    value={filterText}
-                    onChange={(e) => setFilterText(e.target.value)}
-                    style={{marginBottom: "10px", padding: "5px"}}
-                />
-            </div>
-
-            <div style={{
-                overflowX: "auto", backgroundColor: "white", padding: "20px", borderRadius: "8px",
-                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)"
-            }}>
-                <table
-                    {...getTableProps()}
-                    style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}
-                >
+            <div className='course-table-container'>
+                <h1 className='header-style-1'> Course Details</h1>
+                {/* Filter Section */}
+                <div style={{ marginBottom: "20px", textAlign: "center" }}>
+                    {/*<label htmlFor="filter">Filter by Course ID: </label>*/}
+                    <input
+                        id="filter"
+                        placeholder="Filter by Course ID"
+                        type="text"
+                        value={filterText}
+                        onChange={(e) => setFilterText(e.target.value)}
+                        style={{marginBottom: "10px", padding: "5px"}}
+                    />
+                </div>
+                <table {...getTableProps()} className='course-table'>
                     <thead>
                     {headerGroups.map((headerGroup) => (
                         <tr {...headerGroup.getHeaderGroupProps()} style={{ backgroundColor: "#f1f1f1" }}>
