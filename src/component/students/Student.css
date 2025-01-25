@@ -55,7 +55,7 @@ form .error {
 }
 
 /* Container styling */
-/* Container styling */
+
 .student-table-container {
     margin: 20px auto;
     padding: 10px;
@@ -163,7 +163,7 @@ h1 {
 
 /* Edit Button */
 .edit-button {
-    background-color: #4caf50;
+    background-color: green;
     color: white;
     border: none;
     padding: 8px 12px;
