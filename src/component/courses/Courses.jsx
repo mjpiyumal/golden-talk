@@ -35,6 +35,7 @@ const Courses = () => {
             category: course.category,
             name: course.courseName, // Map courseName to name
             fee: course.courseFee, // Map courseFee to fee
+            discount: course.discount,
             installment: course.installment,
         });
         setIsModalOpen(true);
@@ -216,6 +217,17 @@ const Courses = () => {
                                     id="fee"
                                     name="fee"
                                     value={selectedCourse.fee}
+                                    onChange={handleInputChange}
+                                />
+                            </div>
+
+                            <div className="form-group1">
+                                <label htmlFor="fee">Discount:</label>
+                                <input
+                                    type="number"
+                                    id="discount"
+                                    name="discount"
+                                    value={selectedCourse.discount}
                                     onChange={handleInputChange}
                                 />
                             </div>

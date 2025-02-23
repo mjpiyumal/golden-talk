@@ -12,6 +12,7 @@ const CreateCourse = () => {
         category: "",
         name: "",
         fee: "",
+        discount: "0",
         sectionId: sectionIdIelts,
         installment: false,
     });
@@ -50,12 +51,14 @@ const CreateCourse = () => {
             ...formData,
             fee: parseInt(formData.fee, 10), // Convert fee to integer
             sectionId: parseInt(formData.sectionId, 10), // Convert sectionId to integer
+            discount: parseInt(formData.discount, 10),
         };
 
         // If validation is successful, submit the form
         axios
             .post(baseUrl + "courses", courseData)
             .then((response) => {
+
                 toast.success("Course Created successfully!", {
                     position: "top-right",
                     autoClose: 3000,
@@ -70,13 +73,39 @@ const CreateCourse = () => {
                     category: "",
                     name: "",
                     fee: "",
+                    discount: "0",
                     sectionId: "",
                     installment: false,
                 });
             })
             .catch((error) => {
                 console.error("Error adding course:", error);
+
+                if (error.response && error.response.data) {
+                    // Extract the error message from the response
+                    const errorMessage = error.response.data.errorMessage || "Something went wrong!";
+
+                    // Show the toast error message
+                    toast.error(errorMessage, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        theme: "colored",
+                    });
+                } else {
+                    // Handle network or unknown errors
+                    toast.error("Network error. Please try again.", {
+                        position: "top-right",
+                        autoClose: 3000,
+                        theme: "colored",
+                    });
+                }
             });
+
+
     };
 
     return (
@@ -124,6 +153,18 @@ const CreateCourse = () => {
                         min="1"
                     />
                     {errors.fee && <div className="error">{errors.fee}</div>}
+                </div>
+
+                <div className="form-group">
+                    <label>Discount</label>
+                    <input
+                        type="number"
+                        name="discount"
+                        value={formData.discount}
+                        onChange={handleChange}
+                        min="0"
+                    />
+                    {errors.discount && <div className="error">{errors.discount}</div>}
                 </div>
 
                 <div className="form-group">

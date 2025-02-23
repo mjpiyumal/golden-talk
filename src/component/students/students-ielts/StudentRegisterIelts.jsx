@@ -23,6 +23,7 @@ const StudentRegisterIelts = () => {
         },
         sectionId: sectionIdIelts,
         courseId: "",
+        earlyBird: false,
         payment: {
             firstPaymentAmount: "",
             secondPaymentAmount: "",
@@ -90,7 +91,7 @@ const StudentRegisterIelts = () => {
 
     // Handle input changes
     const handleChange = (e) => {
-        const {name, value} = e.target;
+        const {name, value, type, checked} = e.target;
         /*Convert String to Int*/
         if (name.includes("payment.")) {
             // Extract the payment key (e.g., "firstPaymentAmount", "secondPaymentAmount")
@@ -120,6 +121,11 @@ const StudentRegisterIelts = () => {
             setFormData((prev) => ({
                 ...prev,
                 payment: {...prev.payment, [key]: value},
+            }));
+        } else if (name === "earlyBird") {
+            setFormData((prev) => ({
+                ...prev,
+                earlyBird: checked,
             }));
         } else {
             setFormData((prev) => ({
@@ -225,7 +231,7 @@ const StudentRegisterIelts = () => {
                 if (error.response && error.response.status === 409) {
                     // Display backend error message
                     console.log(error.response.data.errorMessage); // This is the error message from backend
-                    setErrors({ email: error.response.data.errorMessage }); // If you want to display in form
+                    setErrors({email: error.response.data.errorMessage}); // If you want to display in form
                 } else {
                     console.error("Error:", error);
                 }
@@ -382,6 +388,17 @@ const StudentRegisterIelts = () => {
                     ))}
                 </select>
                 {errors.courseId && <span className="error">{errors.courseId}</span>}
+
+                <div className="inline-checkbox">
+                    <label htmlFor="earlyBird">Early Bird</label>
+                    <input
+                        type="checkbox"
+                        id="earlyBird"
+                        name="earlyBird"
+                        checked={formData.earlyBird}
+                        onChange={handleChange}
+                    />
+                </div>
 
                 {/* Payment Details */}
                 <label>Payment Amount</label>

@@ -306,3 +306,18 @@ h1 {
 .cancel-button:hover {
     background-color: #c82333;
 }
+
+/*Early Bird*/
+
+.inline-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Adds spacing between label and checkbox */
+}
+
+.inline-checkbox label,
+.inline-checkbox input {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 8px; /* Adjust spacing if needed */
+}
