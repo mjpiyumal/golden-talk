@@ -142,36 +142,48 @@ const TeacherRegisterIelts = () => {
 
         if (validateForm()) {
             try {
-                // Update the formData with selected course IDs
                 const updatedFormData = {
                     ...formData,
-                    courseIds: selectedCourses, // Include selected course IDs
+                    courseIds: selectedCourses,
                 };
 
                 const response = await fetch(baseUrl + "teachers", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(updatedFormData), // Use the updated formData
+                    body: JSON.stringify(updatedFormData),
                 });
 
-                if (response && response.status === 409) {
-                    const errorData = await response.json();  // Correctly parse the JSON response
+                if (response.status === 400) {
+                    const errorData = await response.json(); // Parse JSON response
 
-                    // Show the error message in the toast
-                    toast.error(errorData.errorMessage, {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                    });
+                    if (Array.isArray(errorData)) {
+                        errorData.forEach(error => {
+                            toast.error(error.errorMessage, {
+                                position: "top-right",
+                                autoClose: 3000,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                theme: "colored",
+                            });
+                        });
+                    } else {
+                        toast.error("An unexpected error occurred.", {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            theme: "colored",
+                        });
+                    }
                 }
 
                 if (response.ok) {
-                    // setMessage("Form submitted successfully!");
                     toast.success("Form submitted successfully!", {
                         position: "top-right",
                         autoClose: 3000,
@@ -190,23 +202,8 @@ const TeacherRegisterIelts = () => {
                         courseIds: [],
                         qualifications: [{ qualification: "", institute: "" }],
                     });
-                    setSelectedCourses([]); // Reset selected courses
+                    setSelectedCourses([]);
                     setErrors({});
-                } else {
-                    // setMessage("An error occurred while submitting the form.");
-                    const errorData = await response.json();  // Correctly parse the JSON response
-
-                    // Show the error message in the toast
-                    toast.error(errorData.errorMessage, {
-                        position: "top-right",
-                        autoClose: 3000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "colored",
-                    });
                 }
             } catch (error) {
                 console.error("Error during submission:", error);
@@ -224,6 +221,7 @@ const TeacherRegisterIelts = () => {
             });
         }
     };
+
 
 
     return (
