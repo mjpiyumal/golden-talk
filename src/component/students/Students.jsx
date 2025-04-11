@@ -24,7 +24,6 @@ const Students = () => {
     const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
 
 
-
     // Fetch data from API
     useEffect(() => {
         axios
@@ -90,7 +89,6 @@ const Students = () => {
     };
 
 
-
     // Handle editing Second Payment Amount
     const handleSecondPaymentBlur = (studentId, courseId, value) => {
         axios
@@ -151,29 +149,6 @@ const Students = () => {
                 accessor: "firstPaymentAmount",
                 Cell: ({value}) => `Rs. ${(value || 0).toFixed(2)}`,
             },
-            // {
-            //     Header: "Second Payment Amount",
-            //     accessor: "secondPaymentAmount",
-            //     Cell: ({row, value}) => {
-            //         const [editValue, setEditValue] = useState(value || 0);
-            //
-            //         return (
-            //             <input
-            //                 type="number"
-            //                 value={editValue}
-            //                 onChange={(e) => setEditValue(e.target.value)}
-            //                 onBlur={() =>
-            //                     handleSecondPaymentBlur(
-            //                         row.original.studentId,
-            //                         1, // Replace with actual courseId if needed
-            //                         parseFloat(editValue)
-            //                     )
-            //                 }
-            //                 style={{width: "100%", border: "none", textAlign: "right"}}
-            //             />
-            //         );
-            //     },
-            // },
             {
                 Header: "Second Payment Amount",
                 accessor: "secondPaymentAmount",
@@ -222,7 +197,7 @@ const Students = () => {
             {
                 id: "addCourse",
                 Header: () => null,
-                Cell: ({ row }) => (
+                Cell: ({row}) => (
                     <button
                         className="add-course-button"
                         onClick={() => {
@@ -358,6 +333,7 @@ const Students = () => {
                 />
             )}
 
+            {/*Add multiple courses*/}
             {isAddCourseModalOpen && selectedStudent && (
                 <AddCourseModal
                     studentId={selectedStudent.studentId}
