@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useTable} from "react-table";
 import axios from "axios";
+import AddCourseModal from "./AddCourseModal.jsx";
 import EditStudentModal from "./EditStudentModal"; // Import the modal
 import "./Student.css";
 import {baseUrl} from "../../assets/assets.js";
@@ -20,6 +21,8 @@ const Students = () => {
     const [filterNic, setFilterNic] = useState("");
     const [filterWhatsApp, setFilterWhatsApp] = useState("");
     const [isSecondPaymentModalOpen, setIsSecondPaymentModalOpen] = useState(false);
+    const [isAddCourseModalOpen, setIsAddCourseModalOpen] = useState(false);
+
 
 
     // Fetch data from API
@@ -71,6 +74,22 @@ const Students = () => {
         setSelectedStudent(student);
         setIsSecondPaymentModalOpen(true);
     };
+
+    const handleAddCourse = (studentId) => {
+        console.log("Add course for student:", studentId);
+
+        axios
+            .post(`${baseUrl}students/${studentId}/`)
+            .then((response) => {
+                console.log("Course added successfully:", response.data);
+                // Optionally refresh student data or update UI
+            })
+            .catch((error) => {
+                console.error("Error adding course:", error);
+            });
+    };
+
+
 
     // Handle editing Second Payment Amount
     const handleSecondPaymentBlur = (studentId, courseId, value) => {
@@ -199,6 +218,24 @@ const Students = () => {
                     </button>
                 ),
             },
+
+            {
+                id: "addCourse",
+                Header: () => null,
+                Cell: ({ row }) => (
+                    <button
+                        className="add-course-button"
+                        onClick={() => {
+                            setSelectedStudent(row.original);
+                            setIsAddCourseModalOpen(true);
+                        }}
+                    >
+                        Add Courses
+                    </button>
+                )
+            },
+
+
         ],
         []
     );
@@ -320,6 +357,20 @@ const Students = () => {
                     }}
                 />
             )}
+
+            {isAddCourseModalOpen && selectedStudent && (
+                <AddCourseModal
+                    studentId={selectedStudent.studentId}
+                    onClose={() => {
+                        setIsAddCourseModalOpen(false);
+                        setSelectedStudent(null);
+                    }}
+                    onSuccess={() => {
+                        // Refresh student data if needed
+                    }}
+                />
+            )}
+
 
             {/*Second Payment Model*/}
             {isSecondPaymentModalOpen && (
