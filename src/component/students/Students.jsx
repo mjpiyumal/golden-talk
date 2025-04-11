@@ -224,7 +224,7 @@ const Students = () => {
     } = useTable({columns, data: filteredData});
 
     return (
-        <div className="student-table-container">
+        <div className="student-table-container-1">
             <h1 className='header-style'>Student Records</h1>
 
             <div style={{marginBottom: "20px", textAlign: "left"}}>
